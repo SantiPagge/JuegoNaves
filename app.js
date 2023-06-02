@@ -25,13 +25,35 @@ function initCanvas(){
     }
     
     let enemies = [
-        new enemyTemplate({id: 'enemy3', x: 350, y: 50, width: 80, height: 30})
+        new enemyTemplate({id: 'enemy1', x: 100, y: -20, width: 50, height: 30}),
+        new enemyTemplate({id: 'enemy2', x: 225, y: -20, width: 50, height: 30}),
+        new enemyTemplate({id: 'enemy3', x: 350, y: -20, width: 80, height: 30}),
+        new enemyTemplate({id: 'enemy4', x: 100, y: -70, width: 80, height: 30}),
+        new enemyTemplate({id: 'enemy5', x: 225, y: -70, width: 50, height: 30}),
+        new enemyTemplate({id: 'enemy6', x: 350, y: -70, width: 50, height: 30}),
+        new enemyTemplate({id: 'enemy7', x: 475, y: -70, width: 50, height: 30}),
+        new enemyTemplate({id: 'enemy8', x: 600, y: -70, width: 80, height: 30}),
+        new enemyTemplate({id: 'enemy9', x: 475, y: -20, width: 50, height: 30}),
+        new enemyTemplate({id: 'enemy10', x: 600, y: -20, width: 50, height: 30}),
+
+        // Grupo 2
+        new enemyTemplate({id: 'enemy11', x: 100, y: -220, width: 50, height: 30, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy12', x: 225, y: -220, width: 50, height: 30, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy13', x: 350, y: -220, width: 80, height: 50, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy14', x: 100, y: -270, width: 80, height: 50, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy15', x: 225, y: -270, width: 50, height: 30, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy16', x: 350, y: -270, width: 50, height: 30, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy17', x: 475, y: -270, width: 50, height: 30, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy18', x: 600, y: -270, width: 80, height: 50, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy19', x: 475, y: -220, width: 50, height: 30, image: enemiesPic2}),
+        new enemyTemplate({id: 'enemy20', x: 600, y: -220, width: 50, height: 50, image: enemiesPic2}),
     ];
 
     function renderEnemies(enemyList){
         for(let i = 0; i < enemyList.length; i++){
-            let enemy = enemyList[i]
-            ctx.drawImage(enemy.image, enemy.x, enemy.y += .5, enemy.width, enemy.height)
+            let enemy = enemyList[i];
+            ctx.drawImage(enemy.image, enemy.x, enemy.y += .5, enemy.width, enemy.height);
+            launcher.hitDetectLowerLevel(enemy);
         }
     }
 
@@ -43,6 +65,13 @@ function initCanvas(){
         this.direction,
         this.bg = 'white',
         this.misiles = [];
+
+        this.gameStatus = {
+            over: false,
+            message: '',
+            fillStyle: 'red',
+            font: 'italic bold 36px Arial, sans-serif'
+        }
 
         this.render = function(){
             if(this.direction === 'left'){
@@ -66,7 +95,14 @@ function initCanvas(){
                     this.misiles.splice(i, 1);
                 }
             }
-        }
+
+            if(enemies.length === 0){
+                clearInterval(animateInterval);
+                ctx.fillStyle = 'yellow';
+                ctx.font = this.gameStatus.font;
+                ctx.fillText('You Win!', canvasWidth*.5 - 80, 50);
+            }
+        };
 
         this.hitDetect = function(misil, misili){
             for(let i = 0; i < enemies.length; i++){
@@ -78,6 +114,26 @@ function initCanvas(){
                 }
             }
         }
+
+        this.hitDetectLowerLevel = function (enemy){
+            if(enemy.y > 550){
+                this.gameStatus.over = true;
+                this.gameStatus.message = 'Enemy(s) have passed!';
+            };
+
+            if((enemy.y < this.y + 25 && enemy.y > this.y - 25) && (enemy.x < this.x + 45 && enemy.x > this.x - 45)){
+                this.gameStatus.over = true;
+                this.gameStatus.message = 'You died!';
+            }
+
+            if(this.gameStatus.over === true){
+                clearInterval(animateInterval);
+                ctx.fillStyle = this.gameStatus.fillStyle;
+                ctx.font = this.gameStatus.font;
+
+                ctx.fillText(this.gameStatus.message, canvasWidth*.5 - 80, 50);
+            };
+        };
 
     };
 
@@ -183,6 +239,15 @@ function initCanvas(){
 
     right_btn.addEventListener('mouseup', function(event){
         launcher.direction = '';
+    });
+    
+    fire_btn.addEventListener('mousedown', function(event){
+        launcher.misiles.push({
+            x: launcher.x + launcher.width * .5,
+            y: launcher.y,
+            width: 3,
+            height: 10
+        })
     });
 
     document.addEventListener('keydown', function(event){
