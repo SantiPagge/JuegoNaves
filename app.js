@@ -31,12 +31,31 @@ function initCanvas(){
     function renderEnemies(enemyList){
         for(let i = 0; i < enemyList.length; i++){
             let enemy = enemyList[i]
-            ctx.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height)
+            ctx.drawImage(enemy.image, enemy.x, enemy.y += .5, enemy.width, enemy.height)
         }
     }
 
+    function Launcher(){
+        this.y = 500,
+        this.x = canvasWidth*.5 - 25,
+        this.width = 100,
+        this.height = 100.
+        this.direction,
+        this.bg = 'white',
+        this.misiles = [];
+
+        this.render = function(){
+            ctx.fillStyle = this.bg
+            ctx.drawImage(backgroundImage, 10, 10)
+            ctx.drawImage(naveImage, this.x, this.y, 100, 90)
+        }
+    }
+
+    let launcher = new Launcher();
+
     function animate(){
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        launcher.render();
         renderEnemies(enemies);
     }
 
