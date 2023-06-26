@@ -100,7 +100,7 @@ function initCanvas(){
                 clearInterval(animateInterval);
                 ctx.fillStyle = 'yellow';
                 ctx.font = this.gameStatus.font;
-                ctx.fillText('You Win!', canvasWidth*.5 - 80, 50);
+                ctx.fillText('You Win! Press P to restart', canvasWidth*.5 - 125, 50);
             }
         };
 
@@ -118,12 +118,12 @@ function initCanvas(){
         this.hitDetectLowerLevel = function (enemy){
             if(enemy.y > 550){
                 this.gameStatus.over = true;
-                this.gameStatus.message = 'Enemy(s) have passed!';
+                this.gameStatus.message = 'You lose! Press P to restart';
             };
 
             if((enemy.y < this.y + 25 && enemy.y > this.y - 25) && (enemy.x < this.x + 45 && enemy.x > this.x - 45)){
                 this.gameStatus.over = true;
-                this.gameStatus.message = 'You died!';
+                this.gameStatus.message = 'You died! Press P to restart';
             }
 
             if(this.gameStatus.over === true){
@@ -131,7 +131,7 @@ function initCanvas(){
                 ctx.fillStyle = this.gameStatus.fillStyle;
                 ctx.font = this.gameStatus.font;
 
-                ctx.fillText(this.gameStatus.message, canvasWidth*.5 - 80, 50);
+                ctx.fillText(this.gameStatus.message, canvasWidth*.5 - 130, 50);
             };
         };
 
